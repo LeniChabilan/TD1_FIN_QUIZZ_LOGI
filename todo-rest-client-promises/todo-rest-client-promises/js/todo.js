@@ -1,18 +1,19 @@
 $(function() {
 
-    $("#button").click(refreshTaskList);
+    $("#button").click(refreshQuestionnaireList);
 
-    function remplirTaches(tasks) {
-      console.log(JSON.stringify(tasks));
+    function remplirQuestionnaire(questionnaires) {
+      console.log(JSON.stringify(questionnaires));
       $('#taches').empty();
       $('#taches').append($('<ul>'));
-      for(task of tasks){
-          console.log(task);
+      console.log('ici');
+      for(question of questionnaires["Questionnaire"]){
+          console.log(question);
           $('#taches ul')
                 .append($('<li>')
                 .append($('<a>')
-                .text(task.title)
-                    ).on("click", task, details)
+                .text(question.name)
+                    ).on("click", question, details)
                 );
         }
       }
@@ -21,16 +22,16 @@ $(function() {
           $("#taches").html("<b>Impossible de récupérer les taches à réaliser !</b>"+err);
       }
 
-    function refreshTaskList(){
+    function refreshQuestionnaireList(){
         $("#currenttask").empty();
-        requete = "http://localhost:3000/todo/api/v1.0/quizz";
+        requete = "http://localhost:5555/todo/api/v1.0/quizz";
         fetch(requete)
         .then( response => {
                   if (response.ok) return response.json();
                   else throw new Error('Problème ajax: '+response.status);
                 }
             )
-        .then(remplirTaches)
+        .then(remplirQuestionnaire)
         .catch(onerror);
       }
 
@@ -41,90 +42,77 @@ $(function() {
         fillFormTask(event.data);
         }
 
-
-    class Task{
-        constructor(title, description, done, uri){
-            this.title = title;
-            this.description = description;
-            this.done = done;
-            this.uri = uri;
-            console.log(this.uri);
+    class Questionnaire{
+        constructor(id, name){
+            this.id = id;
+            this.name = name;
         }
     }
 
 
     $("#tools #add").on("click", formTask);
-    $('#tools #del').on('click', delTask);
+    $('#tools #del').on('click', delQuestionnaire);
 
     function formTask(isnew){
         $("#currenttask").empty();
         $("#currenttask")
-            .append($('<span>Titre<input type="text" id="titre"><br></span>'))
-            .append($('<span>Description<input type="text" id="descr"><br></span>'))
-            .append($('<span>Done<input type="checkbox" id="done"><br></span>'))
-            .append($('<span><input type="hidden" id="turi"><br></span>'))
+            .append($('<span>Id<input type="text" id="id" readonly><br></span>'))
+            .append($('<span>Name<input type="text" id="name"><br></span>'))
             .append(isnew?$('<span><input type="button" value="Save Task"><br></span>').on("click", saveNewTask)
                          :$('<span><input type="button" value="Modify Task"><br></span>').on("click", saveModifiedTask)
                 );
         }
 
     function fillFormTask(t){
-        $("#currenttask #titre").val(t.title);
-        $("#currenttask #descr").val(t.description);
-         t.uri=(t.uri == undefined)?"http://localhost:3000/tasks/"+t.id:t.uri;
-         $("#currenttask #turi").val(t.uri);
-        t.done?$("#currenttask #done").prop('checked', true):
-        $("#currenttask #done").prop('checked', false);
+        $("#currenttask #id").val(t.id);
+        $("#currenttask #name").val(t.name);
     }
 
     function saveNewTask(){
-        var task = new Task(
-            $("#currenttask #titre").val(),
-            $("#currenttask #descr").val(),
-            $("#currenttask #done").is(':checked')
+        var questionnaire = new Questionnaire(
+            $("#currenttask #name").val(),
             );
-        console.log(JSON.stringify(task));
-        fetch("http://localhost:3000/tasks/",{
+        console.log(JSON.stringify(questionnaire));
+        fetch("http://localhost:5555/todo/api/v1.0/quizz",{
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         method: "POST",
-        body: JSON.stringify(task)
+        body: JSON.stringify(questionnaire)
             })
         .then(res => { console.log('Save Success') ;
                        $("#result").text(res['contenu']);
-                       refreshTaskList();
+                       refreshQuestionnaireList();
                    })
         .catch( res => { console.log(res) });
     }
 
     function saveModifiedTask(){
-        var task = new Task(
-            $("#currenttask #titre").val(),
-            $("#currenttask #descr").val(),
-            $("#currenttask #done").is(':checked'),
-            $("#currenttask #turi").val()
+        var questionnaire = new Questionnaire(
+            $("#currenttask #id").val(),
+            $("#currenttask #name").val(),
             );
         console.log("PUT");
-        console.log(task.uri);
-        console.log(JSON.stringify(task));
-        fetch(task.uri,{
+        console.log(questionnaire.id);
+        console.log(JSON.stringify(questionnaire));
+        console.log("http://localhost:5555/todo/api/v1.0/quizz/"+questionnaire.id);
+        fetch("http://localhost:5555/todo/api/v1.0/quizz/"+questionnaire.id,{
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         },
         method: "PUT",
-        body: JSON.stringify(task)
+        body: JSON.stringify(questionnaire)
             })
-        .then(res => { console.log('Update Success');  refreshTaskList();} )
+        .then(res => { console.log('Update Success');  refreshQuestionnaireList();} )
         .catch( res => { console.log(res) });
     }
 
-    function delTask(){
-        if ($("#currenttask #turi").val()){
-        url = $("#currenttask #turi").val();
-        fetch(url,{
+    function delQuestionnaire(){
+        if ($("#currenttask #id").val()){
+        url = $("#currenttask #id").val();
+        fetch("http://localhost:5555/todo/api/v1.0/quizz/"+url,{
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json'
@@ -132,7 +120,7 @@ $(function() {
         method: "DELETE"
             })
         .then(res => { console.log('Delete Success:' + res); } )
-        .then(refreshTaskList)
+        .then(refreshQuestionnaireList)
         .catch( res => { console.log(res);  });
     }
   }
