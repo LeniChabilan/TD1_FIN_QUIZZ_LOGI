@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 app = Flask(__name__)
-cors = CORS(app, resources={r"/quizz/api/v1.0/*": {"origins": "*"}})
+cors = CORS(app, resources={r"/todo/api/v1.0/*": {"origins": "*"}})
 
 import os.path
 
