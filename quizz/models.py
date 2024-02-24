@@ -83,7 +83,7 @@ class Question(db.Model):
         db.session.commit()
 
     def update_question(idQuestinnaire,question):
-        Question.query.filter_by(id=id).update(question)
+        Question.query.filter_by(id=idQuestinnaire).update(question)
         db.session.commit()
     
 # class simpleQuestion(Question):

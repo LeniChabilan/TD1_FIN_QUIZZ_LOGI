@@ -10,9 +10,9 @@ def loaddb():
     db.session.add(Questionnaire("Questionnaire 1"))
     db.session.add(Questionnaire("Questionnaire 2"))
 
-    db.session.add(Question("Question 1 Q1", "Type 1", 1))
-    db.session.add(Question("Question 2 Q1", "Type 2", 1))
+    db.session.add(Question("Question 1", "radio", 1))
+    db.session.add(Question("Question 2", "textfield", 1))
 
-    db.session.add(Question("Question 1 Q2", "Type 1", 2))
-    db.session.add(Question("Question 2 Q2", "Type 2", 2))
+    db.session.add(Question("Question 3", "radio", 2))
+    db.session.add(Question("Question 4", "checkbox", 2))
     db.session.commit()

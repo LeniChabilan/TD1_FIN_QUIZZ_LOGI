@@ -64,5 +64,5 @@ def add_question_oui(id):
 def update_question_oui(id,id2):
     if not request.json :
         abort(400)
-    Question.update_question(id,request.json)
+    Question.update_question(id2,request.json)
     return jsonify({'Question': request.json}), 201
