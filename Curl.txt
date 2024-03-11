@@ -1,0 +1,32 @@
+DELETE QUESTIONNAIRE: 
+
+curl --location --request DELETE 'http://localhost:5555/todo/api/v1.0/quizz/2' --header 'Content-Type: application/json'
+
+
+DELETE QUESTION : 
+
+curl --location --request DELETE 'http://localhost:5555/todo/api/v1.0/quizz/1/question/2' \
+--header 'Content-Type: application/json'
+
+
+Post QUESTIONNAIRE : 
+curl -i -H "Content-Type: application/json" -X POST -d '{"name": "Questionnaire123165"}' http:/localhost:5555/todo/api/v1.0/quizz
+
+
+
+PUT QUESTIONNARE: 
+
+curl --location --request PUT 'http://localhost:5555/todo/api/v1.0/quizz/2' \
+--header 'Content-Type: application/json' \
+--data '{"name": "QUESTIONNAIRE DE FOU"}'
+
+
+Post QUESTION : 
+curl -i -H "Content-Type: application/json" -X POST -d '{"title": "QuestNEW" , "questionType": "RADIOBUTTON" }' http:/localhost:5555/todo/api/v1.0/quizz/1/question
+
+
+PUT QUESTION: 
+
+curl --location --request PUT 'http://localhost:5555/todo/api/v1.0/quizz/1/question/2' \
+--header 'Content-Type: application/json' \
+--data '{"title": "STP"}'
